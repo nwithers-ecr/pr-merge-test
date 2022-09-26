@@ -8,6 +8,7 @@ on: # rebuild any PRs and main branch changes
       - main
 
 jobs:
+
   pr_merge:
     name: "PR Merge"
     runs-on: ubuntu-20.04
