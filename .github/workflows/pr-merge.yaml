@@ -20,6 +20,5 @@ jobs:
 
       - name: Pre-build Merge
         run: |
-          ancestor=$(git merge-base ${{ github.base_ref }} HEAD)
-          git read-tree -muv $ancestor ${{ github.base_ref }} HEAD
+          git read-tree -muv "$(git merge-base ${{ github.base_ref }} HEAD)" ${{ github.base_ref }} HEAD
           echo $?
