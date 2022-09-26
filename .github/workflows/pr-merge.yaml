@@ -3,7 +3,7 @@
 
 name: Validate PR
 on: # rebuild any PRs and main branch changes
-  pull_request:
+  pull_request_target:
     branches:
       - main
 
@@ -15,10 +15,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.head.ref }}
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
 
       - name: Pre-build Merge
         run: |
-          ancestor=$(git merge-base ${{ github.base_ref }} ${{ github.head_ref }})
-          git read-tree -muv $ancestor ${{ github.base_ref }} ${{ github.head_ref }}
+          main=$(git rev-parse origin/${{ github.base_ref }})
+          head=$(git rev-parse origin/${{ github.head_ref }})
+          git read-tree -muv "$(git merge-base $main $head)" $main $head
