@@ -22,3 +22,4 @@ jobs:
         run: |
           ancestor=$(git merge-base ${{ github.base_ref }} HEAD)
           git read-tree -muv $ancestor ${{ github.base_ref }} HEAD
+          echo $?
