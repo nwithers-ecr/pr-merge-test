@@ -1,0 +1,25 @@
+# Copyright 2022, Edge Case Research, Inc.
+# Confidential
+
+name: Validate PR
+on: # rebuild any PRs and main branch changes
+  workflow_run:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  pr_merge:
+    name: "PR Merge"
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head.ref }}
+          fetch-depth: 0
+
+      - name: Pre-build Merge
+        run: |
+          ancestor=$(git merge-base ${{ github.base_ref }} ${{ github.head_ref }})
+          git read-tree -muv $ancestor ${{ github.base_ref }} ${{ github.head_ref }}
