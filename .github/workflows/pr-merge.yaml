@@ -20,6 +20,7 @@ jobs:
 
       - name: Pre-build Merge
         run: |
-          echo "$(git merge-base ${{ github.base_ref }} HEAD))"
+          echo git --version
+          echo "$(git merge-base ${{ github.base_ref }} HEAD)"
           git read-tree -muv "$(git merge-base ${{ github.base_ref }} HEAD)" ${{ github.base_ref }} HEAD
           echo $?
