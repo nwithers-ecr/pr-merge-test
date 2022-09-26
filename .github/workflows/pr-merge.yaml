@@ -3,7 +3,6 @@
 
 name: Validate PR
 on: # rebuild any PRs and main branch changes
-  workflow_run:
   pull_request:
     branches:
       - main
