@@ -15,10 +15,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
 
       - name: Pre-build Merge
         run: |
-          main=$(git rev-parse ${{ github.base_ref }})
-          head=$(git rev-parse ${{ github.head_ref }})
+          main=$(git rev-parse origin/${{ github.base_ref }})
+          head=$(git rev-parse origin/${{ github.head_ref }})
           git read-tree -muv "$(git merge-base $main $head )" $main $head
