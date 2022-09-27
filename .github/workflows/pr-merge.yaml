@@ -13,7 +13,7 @@ jobs:
       matrix:
         num: ["1", "2", "3"]
     outputs:
-      matrix: ${{ matrix.num }}
+      ${{ matrix.num }}: ${{ matrix.num }}
     steps:
       - name: Echo matrix
         run: echo ${{ matrix.num }}
@@ -25,4 +25,4 @@ jobs:
     needs: nums
     steps:
       - name: Echo matrix
-        run: echo ${{ needs.nums.outputs.matrix.2 }}
+        run: echo ${{ needs.nums.outputs.2 }}
