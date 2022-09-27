@@ -6,23 +6,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  nums:
+  alpha:
     name: "matrix ${{ matrix.dir }}"
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        num: ["1", "2", "3"]
+        letter: ["a", "b", "c"]
     outputs:
-      ${{ matrix.num }}: ${{ matrix.num }}
+      ${{ matrix.letter }}: ${{ matrix.letter }}
     steps:
       - name: Echo matrix
-        run: echo ${{ matrix.num }}
-      - name: Echo no matrix
-        run: echo "test"
+        run: echo ${{ matrix.letter }}
   out:
     name: "cat together"
     runs-on: ubuntu-20.04
-    needs: nums
+    needs: alpha
     steps:
       - name: Echo matrix
-        run: echo ${{ needs.nums.outputs.2 }}
+        run: echo ${{ needs.alpha.outputs.b }}
