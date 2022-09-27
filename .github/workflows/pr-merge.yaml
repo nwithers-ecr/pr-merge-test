@@ -6,6 +6,18 @@ on:
   workflow_dispatch:
 
 jobs:
+  first:
+    name: "make comment"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: release
+          recreate: true
+          number: 1
+          message: |
+            ${{ matrix.letter }}
+
   alpha:
     name: "matrix ${{ matrix.dir }}"
     runs-on: ubuntu-20.04
@@ -22,7 +34,6 @@ jobs:
         with:
           header: release
           append: true
-          recreate: true
           number: 1
           message: |
             ${{ matrix.letter }}
