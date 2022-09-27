@@ -3,7 +3,7 @@
 
 name: Test matrix
 on:
-  workflow_run:
+  workflow_dispatch:
 
 jobs:
   nums:
