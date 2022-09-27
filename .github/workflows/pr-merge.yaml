@@ -12,8 +12,17 @@ jobs:
     strategy:
       matrix:
         num: ["1", "2", "3"]
+    outputs:
+      matrix: ${{ matrix.num }}
     steps:
       - name: Echo matrix
         run: echo ${{ matrix.num }}
       - name: Echo no matrix
         run: echo "test"
+  out:
+    name: "cat together"
+    runs-on: ubuntu-20.04
+    needs: nums
+    steps:
+      - name: Echo matrix
+        run: echo ${{ needs.nums.outputs.matrix }}
