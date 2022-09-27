@@ -16,7 +16,7 @@ jobs:
           recreate: true
           number: 1
           message: |
-            ${{ matrix.letter }}
+            "test"
 
   alpha:
     name: "matrix ${{ matrix.dir }}"
