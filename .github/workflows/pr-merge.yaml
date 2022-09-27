@@ -21,6 +21,7 @@ jobs:
   alpha:
     name: "matrix ${{ matrix.dir }}"
     runs-on: ubuntu-20.04
+    needs: first
     strategy:
       matrix:
         letter: ["a", "b", "c"]
