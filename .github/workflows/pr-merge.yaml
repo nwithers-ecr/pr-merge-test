@@ -17,6 +17,15 @@ jobs:
     steps:
       - name: Echo matrix
         run: echo ${{ matrix.letter }}
+                
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: release
+          append: true
+          number: 1
+          message: |
+            ${{ matrix.letter }}
+
   out:
     name: "cat together"
     runs-on: ubuntu-20.04
