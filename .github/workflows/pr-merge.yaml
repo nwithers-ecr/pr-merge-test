@@ -13,7 +13,7 @@ jobs:
       matrix:
         letter: ["a", "b", "c"]
     outputs:
-      ${{ matrix.letter }}: ${{ matrix.letter }}
+      letter: ${{ matrix.letter }}
     steps:
       - name: Echo matrix
         run: echo ${{ matrix.letter }}
@@ -23,4 +23,4 @@ jobs:
     needs: alpha
     steps:
       - name: Echo matrix
-        run: echo ${{ needs.alpha.outputs.b }}
+        run: echo ${{ needs.alpha.outputs.letter }}
