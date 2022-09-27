@@ -1,25 +1,19 @@
 # Copyright 2022, Edge Case Research, Inc.
 # Confidential
 
-name: Validate PR
-on: # rebuild any PRs and main branch changes
-  pull_request_target:
-    branches:
-      - main
+name: Test matrix
+on:
+  workflow_run:
 
 jobs:
-  pr_merge:
-    name: "PR Merge"
+  nums:
+    name: "matrix ${{ matrix.dir }}"
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        num: ["1", "2", "3"]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
-
-      - name: Pre-build Merge
-        run: |
-          main=$(git rev-parse origin/${{ github.base_ref }})
-          head=$(git rev-parse origin/${{ github.head_ref }})
-          git read-tree -muv "$(git merge-base $main $head)" $main $head
+      - name: Echo matrix
+        run: echo ${{ matrix.num }}
+      - name: Echo no matrix
+        run: echo "test"
