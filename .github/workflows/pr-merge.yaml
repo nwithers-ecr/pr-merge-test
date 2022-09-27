@@ -25,4 +25,4 @@ jobs:
     needs: nums
     steps:
       - name: Echo matrix
-        run: echo ${{ needs.nums.outputs.matrix }}
+        run: echo ${{ needs.nums.outputs.matrix.2 }}
