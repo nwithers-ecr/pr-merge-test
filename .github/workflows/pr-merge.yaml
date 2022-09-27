@@ -16,7 +16,7 @@ jobs:
           recreate: true
           number: 1
           message: |
-            "test"
+            # Sticky
 
   alpha:
     name: "matrix ${{ matrix.dir }}"
