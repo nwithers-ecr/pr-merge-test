@@ -1,6 +1,3 @@
-# Copyright 2022, Edge Case Research, Inc.
-# Confidential
-
 name: Test matrix
 on:
   workflow_dispatch:
