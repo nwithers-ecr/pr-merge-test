@@ -3,22 +3,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  first:
-    name: "make comment"
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: release
-          recreate: true
-          number: 1
-          message: |
-            # Sticky
-
   alpha:
     name: "matrix ${{ matrix.dir }}"
     runs-on: ubuntu-20.04
-    needs: first
     strategy:
       matrix:
         letter: ["a", "b", "c"]
@@ -27,7 +14,46 @@ jobs:
     steps:
       - name: Echo matrix
         run: echo ${{ matrix.letter }}
-                
+
+      - name: Collect CI outputs
+        run: |
+          cat <<EOF > ${{github.workspace}}/${{matrix.letter}}.md
+          [View GitHub Actions Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          ## Check ${{matrix.letter}}
+          \`\`\`
+          ## Lint ${{matrix.letter}}
+          \`\`\`
+          ## Test ${{matrix.letter}}
+          EOF
+        
+      - name: Publish CI output to Wiki
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}
+        with:
+          source_file: ${{github.workspace}}/${{matrix.letter}}.md
+          destination_repo: "${{ github.repository }}.wiki"
+          destination_branch: 'actions'
+          user_email: 'test@gmail.com'
+          user_name: 'test'
+          commit_message: "CI outputs for action run ${{ github.run_id }}-${{ matrix.letter }}"
+        continue-on-error: true
+
+  out:
+    name: "cat together"
+    runs-on: ubuntu-20.04
+    needs: alpha
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repo: "${{ github.repository }}.wiki"
+          ref: "actions"
+          fetch-depth: 1
+          
+      - name: Echo matrix
+        run: cat *
+        
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: release
@@ -35,11 +61,3 @@ jobs:
           number: 1
           message: |
             ${{ matrix.letter }}
-
-  out:
-    name: "cat together"
-    runs-on: ubuntu-20.04
-    needs: alpha
-    steps:
-      - name: Echo matrix
-        run: echo ${{ needs.alpha.outputs.letter }}
