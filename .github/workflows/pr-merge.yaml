@@ -29,7 +29,6 @@ jobs:
       - uses: Wandalen/wretry.action@master
         with:
           action: dmnemec/copy_file_to_another_repo_action@main
-          attempt_delay: 100
           with: |
             source_file: ${{github.workspace}}/${{matrix.letter}}.md
             destination_repo: "${{ github.repository }}.wiki"
@@ -37,6 +36,7 @@ jobs:
             user_email: 'nwithers@ecr.ai'
             user_name: 'nwithers-ecr'
             commit_message: "CI outputs for action run ${{ github.run_id }}-${{ matrix.letter }}"
+          attempt_delay: 1000
 
   out:
     name: "cat together"
