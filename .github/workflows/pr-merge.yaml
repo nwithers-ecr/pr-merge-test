@@ -26,12 +26,10 @@ jobs:
           ## Test ${{matrix.letter}}
           EOF
           
-      - uses: Wandalen/wretry.action@master
+      - uses: nwithers-ecr/wretry.action@master
         with:
           action: dmnemec/copy_file_to_another_repo_action@main
           with: |
-            env:
-              API_TOKEN_GITHUB: ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}
             source_file: ${{github.workspace}}/${{matrix.letter}}.md
             destination_repo: "${{ github.repository }}.wiki"
             destination_branch: 'actions'
