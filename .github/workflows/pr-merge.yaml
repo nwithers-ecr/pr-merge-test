@@ -25,19 +25,18 @@ jobs:
           \`\`\`
           ## Test ${{matrix.letter}}
           EOF
-        
-      - name: Publish CI output to Wiki
-        uses: dmnemec/copy_file_to_another_repo_action@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}
+          
+      - uses: Wandalen/wretry.action@master
         with:
-          source_file: ${{github.workspace}}/${{matrix.letter}}.md
-          destination_repo: "${{ github.repository }}.wiki"
-          destination_branch: 'actions'
-          user_email: 'nwithers@ecr.ai'
-          user_name: 'nwithers-ecr'
-          commit_message: "CI outputs for action run ${{ github.run_id }}-${{ matrix.letter }}"
-        continue-on-error: true
+          action: dmnemec/copy_file_to_another_repo_action@main
+          attempt_delay: 100
+          with: |
+            source_file: ${{github.workspace}}/${{matrix.letter}}.md
+            destination_repo: "${{ github.repository }}.wiki"
+            destination_branch: 'actions'
+            user_email: 'nwithers@ecr.ai'
+            user_name: 'nwithers-ecr'
+            commit_message: "CI outputs for action run ${{ github.run_id }}-${{ matrix.letter }}"
 
   out:
     name: "cat together"
