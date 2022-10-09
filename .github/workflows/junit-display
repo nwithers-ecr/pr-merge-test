@@ -1,0 +1,28 @@
+name: Test junit
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build and Run Tests
+        run: |
+          cat <<-EOF > results.xml
+            ${{ secrets.results }}
+          EOF
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: 'results.xml'
+      #- name: Publish to wiki
+      #  uses: dmnemec/copy_file_to_another_repo_action@main
+      #    with: |
+      #      source_file: ${{github.workspace}}/junit-report.md
+      #      destination_repo: "${{ github.repository }}.wiki"
+      #      destination_branch: 'master'
+      #      user_email: 'nwithers@ecr.ai'
+      #      user_name: 'nwithers-ecr'
+      #      commit_message: "junit report"
