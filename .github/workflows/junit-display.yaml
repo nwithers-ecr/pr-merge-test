@@ -7,16 +7,13 @@ jobs:
     name: Build and Run Tests
     runs-on: ubuntu-latest
     steps:
-      - name: Build and Run Tests
-        run: |
-          cat <<-EOF > results.xml
-            ${{ secrets.results }}
-          EOF
+      - name: Checkout Code
+        uses: actions/checkout@v3
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v3
         if: always() # always run even if the previous step fails
         with:
-          report_paths: 'results.xml'
+          report_paths: 'junitResults.xml'
       #- name: Publish to wiki
       #  uses: dmnemec/copy_file_to_another_repo_action@main
       #    with: |
