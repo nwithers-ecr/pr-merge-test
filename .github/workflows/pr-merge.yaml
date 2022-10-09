@@ -1,26 +1,62 @@
-# Copyright 2022, Edge Case Research, Inc.
-# Confidential
-
-name: Validate PR
-on: # rebuild any PRs and main branch changes
-  pull_request_target:
-    branches:
-      - main
+name: Test matrix
+on:
+  workflow_dispatch:
 
 jobs:
-
-  pr_merge:
-    name: "PR Merge"
+  alpha:
+    name: "matrix ${{ matrix.dir }}"
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        letter: ["a", "b", "c"]
+    outputs:
+      letter: ${{ matrix.letter }}
+    steps:
+      - name: Echo matrix
+        run: echo ${{ matrix.letter }}
+
+      - name: Collect CI outputs
+        run: |
+          cat <<EOF > ${{github.workspace}}/${{matrix.letter}}.md
+          [View GitHub Actions Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          ## Check ${{matrix.letter}}
+          \`\`\`
+          ## Lint ${{matrix.letter}}
+          \`\`\`
+          ## Test ${{matrix.letter}}
+          EOF
+          
+      - uses: nwithers-ecr/wretry.action@master
+        with:
+          action: dmnemec/copy_file_to_another_repo_action@main
+          with: |
+            source_file: ${{github.workspace}}/${{matrix.letter}}.md
+            destination_repo: "${{ github.repository }}.wiki"
+            destination_branch: 'actions'
+            user_email: 'nwithers@ecr.ai'
+            user_name: 'nwithers-ecr'
+            commit_message: "CI outputs for action run ${{ github.run_id }}-${{ matrix.letter }}"
+          attempt_delay: 1000
+
+  out:
+    name: "cat together"
+    runs-on: ubuntu-20.04
+    needs: alpha
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
-
-      - name: Pre-build Merge
-        run: |
-          main=$(git rev-parse origin/${{ github.base_ref }})
-          head=$(git rev-parse origin/${{ github.head_ref }})
-          git read-tree -muv "$(git merge-base $main $head)" $main $head
+          repository: "${{ github.repository }}.wiki"
+          ref: "actions"
+          fetch-depth: 1
+          
+      - name: Echo matrix
+        run: cat *
+        
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: release
+          append: true
+          number: 1
+          message: |
+            ${{ matrix.letter }}
