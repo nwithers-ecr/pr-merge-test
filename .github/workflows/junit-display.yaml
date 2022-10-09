@@ -15,6 +15,12 @@ jobs:
         if: always() # always run even if the previous step fails
         with:
           report_paths: 'junitResults.xml'
+          require_tests: true
+          include_passed: true
+          summary: "a summary"
+          update_check: true
+          detailed_summary: true
+          annotate_notice: true
       #- name: Publish to wiki
       #  uses: dmnemec/copy_file_to_another_repo_action@main
       #    with: |
