@@ -14,6 +14,18 @@ jobs:
         if: always() # always run even if the previous step fails
         with:
           report_paths: 'junitResults.xml'
+      - name: Build count
+        uses: masci/datadog@v1
+        with:
+          api-key: ${{ secrets.DATADOG_API_KEY }}
+          metrics: |
+            - type: "count"
+              name: "ci.tests.passed"
+              value: ${{ steps.run_tests.outputs.passed }}
+              host: ${{ github.repository_owner }}
+              tags:
+                - "repo:${{ github.repository }}"
+                - "branch:${{ github.head_ref }}"
       #- name: Publish to wiki
       #  uses: dmnemec/copy_file_to_another_repo_action@main
       #    with: |
