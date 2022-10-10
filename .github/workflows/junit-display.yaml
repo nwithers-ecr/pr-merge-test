@@ -21,6 +21,7 @@ jobs:
           update_check: true
           detailed_summary: true
           annotate_notice: true
+          token: ${{ secrets.pat }}
       #- name: Publish to wiki
       #  uses: dmnemec/copy_file_to_another_repo_action@main
       #    with: |
