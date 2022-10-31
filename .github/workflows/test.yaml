@@ -1,0 +1,143 @@
+# Copyright 2022, Edge Case Research, Inc.
+# Confidential
+
+name: Validate PR
+on: # rebuild any PRs and main branch changes
+  pull_request_target:
+    branches:
+      - main
+      - release/**
+
+jobs:
+  ci:
+    name: "Continuous Integration: Component Library"
+    runs-on: ubuntu-20.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.head_ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Pre-build Merge
+        run: |
+          main=$(git rev-parse origin/${{ github.base_ref }})
+          head=$(git rev-parse origin/${{ github.head_ref }})
+          ancestor=$(git merge-base $main $head)
+          git read-tree -muv $ancestor $main $head
+
+      - name: Install Task
+        uses: arduino/setup-task@v1
+
+      - name: Login to Harbor
+        uses: docker/login-action@v1
+        with:
+          registry: harbor.ecr.software
+          username: "robot$github-actions"
+          password: ${{ secrets.HARBOR_TOKEN }}
+
+      - name: Copyright Check
+        run: task copyright:check
+
+      - name: Set temp files for outputs
+        id: ci_vars
+        run: |
+          tmp_dir="${{github.workspace}}/pkg"
+          mkdir -p "$tmp_dir"
+          echo "::set-output name=ci_tmp_file::$tmp_dir/PR-${{github.event.pull_request.number}}.md"
+          echo "::set-output name=format_tmp_file::$tmp_dir/format"
+          echo "::set-output name=lint_tmp_file::$tmp_dir/lint"
+          echo "::set-output name=test_tmp_file::$tmp_dir/test"
+
+      - name: Collect CI outputs
+        run: |
+          cat <<EOF > ${{ steps.ci_vars.outputs.ci_tmp_file }}
+          [View Pull Request](${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }})
+          [View GitHub Actions Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          [View Pull Request Test Report](${{ github.server_url }}/${{ github.repository }}/wiki/${{ github.event.pull_request.number }}-test-report)
+          ## Format
+          \`\`\`
+          $(cat ${{ steps.ci_vars.outputs.format_tmp_file}})
+          \`\`\`
+          ## Lint
+          \`\`\`
+          $(cat ${{ steps.ci_vars.outputs.lint_tmp_file}})
+          \`\`\`
+          ## Test
+          \`\`\`yaml
+          $(cat ${{ steps.ci_vars.outputs.test_tmp_file}})
+          \`\`\`
+          EOF
+
+        uses: QwerMike/xpath-action@v1
+        with:
+          filename: 'junits/junitResults.xml'
+          expression: '//case/duration'
+
+      - name: Collect CI outputs
+        run: |
+          cat <<EOF > ${{ steps.ci_vars.outputs.ci_tmp_file }}
+          [View Pull Request](${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }})
+          [View GitHub Actions Run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          [View Pull Request CI/CD Logs](${{ github.server_url }}/${{ github.repository }}/wiki/${{ github.event.pull_request.number }})
+          # ❌ PR-1052 Test Report 2021-10-19 17:46 UTC
+          ---
+          | Result | Total | Passed   | Failed | Skipped | Duration |
+          | ------ | ----- | ------- | ------ | ------- | -------- |
+          | ❌      | 52   | 2       | 50     | 0       | 809.767200363s |
+
+          # Index
+
+          | Name | Result | Duration |
+          | ---- | ------ | -------- |
+          EOF
+
+          cat <<EOF >> ${{ steps.ci_vars.outputs.ci_tmp_file }}
+          | [init::web::test::test_web_destroy](#initwebtesttest_web_destroy) | ❌ | 36.428719919s |
+          | [init::web::test::test_web_test](#initwebtesttest_web_test) | ✅ | 7.26800036s |
+          EOF
+
+          cat <<EOF >> ${{ steps.ci_vars.outputs.ci_tmp_file }}
+          # Details
+          ## ❌ init::web::test::test_web_destroy
+          **Duration**: 36.428719919s
+          <details>
+          <summary>Test output</summary>
+          <pre>
+          thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: WaitTimeout', src/init/web.rs:137:14
+          note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+          </pre>
+          </details>
+
+          ## ✅ init::web::test::test_web_test
+          **Duration**: 7.26800036s
+          EOF
+      - name: Test Metrics
+        uses: masci/datadog@v1
+        with:
+          api-key: ${{ secrets.DATADOG_API_KEY }}
+          metrics: |
+            - type: "count"
+              name: "ci.tests.passed"
+              value: ${{ steps.run_tests.outputs.passed }}
+              host: ${{ github.repository_owner }}
+              tags:
+                - "repo:${{ github.repository }}"
+                - "branch:${{ github.head_ref }}"
+            - type: "count"
+              name: "ci.tests.failed"
+              value: ${{ steps.run_tests.outputs.passed }}
+              host: ${{ github.repository_owner }}
+              tags:
+                - "repo:${{ github.repository }}"
+                - "branch:${{ github.head_ref }}"
+            - type: "count"
+              name: "ci.tests.skipped"
+              value: ${{ steps.run_tests.outputs.passed }}
+              host: ${{ github.repository_owner }}
+              tags:
+                - "repo:${{ github.repository }}"
+                - "branch:${{ github.head_ref }}"

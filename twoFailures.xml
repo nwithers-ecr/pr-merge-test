@@ -1,0 +1,78 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<result plugin="junit@1.60">
+  <suites>
+    <suite>
+      <file>/tmp/jenkins-e606f5ec/workspace/nloop_main/junits/nui-unit-tests.xml</file>
+      <name>ArtifactViewsSaveAsModal</name>
+      <duration>11.728</duration>
+      <timestamp>2022-10-04T19:51:44</timestamp>
+      <time>11.728</time>
+      <nodeId>630</nodeId>
+      <enclosingBlocks>
+        <string>629</string>
+      </enclosingBlocks>
+      <enclosingBlockNames>
+        <string>Declarative: Post Actions</string>
+      </enclosingBlockNames>
+      <cases>
+        <case>
+          <duration>5.467</duration>
+          <className>nui.ArtifactViewsSaveAsModal</className>
+          <testName>ArtifactViewsSaveAsModal › save saves if the name is valid</testName>
+          <skipped>false</skipped>
+          <errorStackTrace>: Timeout - Async callback was not invoked within the 5000ms timeout specified by jest.setTimeout.Timeout - Async callback was not invoked within the 5000ms timeout specified by jest.setTimeout.Error:
+    at new Spec (/workspace/src/nui/node_modules/jest-jasmine2/build/jasmine/Spec.js:116:22)
+    at new Spec (/workspace/src/nui/node_modules/jest-jasmine2/build/setup_jest_globals.js:80:9)
+    at specFactory (/workspace/src/nui/node_modules/jest-jasmine2/build/jasmine/Env.js:575:24)
+    at Env.it (/workspace/src/nui/node_modules/jest-jasmine2/build/jasmine/Env.js:644:24)
+    at Env.it (/workspace/src/nui/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:132:23)
+    at it (/workspace/src/nui/node_modules/jest-jasmine2/build/jasmine/jasmineLight.js:93:21)
+    at Suite.&lt;anonymous&gt; (/workspace/src/nui/tests/unit/components/tabular-artifacts/artifactViewsSaveAsModal.spec.js:143:5)
+    at addSpecsToSuite (/workspace/src/nui/node_modules/jest-jasmine2/build/jasmine/Env.js:496:51)
+    at Env.describe (/workspace/src/nui/node_modules/jest-jasmine2/build/jasmine/Env.js:466:11)
+    at describe (/workspace/src/nui/node_modules/jest-jasmine2/build/jasmine/jasmineLight.js:81:18)
+    at Suite.&lt;anonymous&gt; (/workspace/src/nui/tests/unit/components/tabular-artifacts/artifactViewsSaveAsModal.spec.js:70:3)
+    at addSpecsToSuite (/workspace/src/nui/node_modules/jest-jasmine2/build/jasmine/Env.js:496:51)
+    at Env.describe (/workspace/src/nui/node_modules/jest-jasmine2/build/jasmine/Env.js:466:11)
+    at describe (/workspace/src/nui/node_modules/jest-jasmine2/build/jasmine/jasmineLight.js:81:18)
+    at Object.&lt;anonymous&gt; (/workspace/src/nui/tests/unit/components/tabular-artifacts/artifactViewsSaveAsModal.spec.js:34:1)
+    at Runtime._execModule (/workspace/src/nui/node_modules/jest-runtime/build/index.js:867:68)
+    at Runtime._loadModule (/workspace/src/nui/node_modules/jest-runtime/build/index.js:577:12)
+    at Runtime.requireModule (/workspace/src/nui/node_modules/jest-runtime/build/index.js:433:10)
+    at /workspace/src/nui/node_modules/jest-jasmine2/build/index.js:202:13
+    at Generator.next (&lt;anonymous&gt;)
+    at asyncGeneratorStep (/workspace/src/nui/node_modules/jest-jasmine2/build/index.js:27:24)
+    at _next (/workspace/src/nui/node_modules/jest-jasmine2/build/index.js:47:9)
+    at /workspace/src/nui/node_modules/jest-jasmine2/build/index.js:52:7
+    at new Promise (&lt;anonymous&gt;)
+    at /workspace/src/nui/node_modules/jest-jasmine2/build/index.js:44:12
+    at jasmine2 (/workspace/src/nui/node_modules/jest-jasmine2/build/index.js:60:19)
+    at /workspace/src/nui/node_modules/jest-runner/build/runTest.js:385:24
+    at Generator.next (&lt;anonymous&gt;)
+    at asyncGeneratorStep (/workspace/src/nui/node_modules/jest-runner/build/runTest.js:161:24)
+    at _next (/workspace/src/nui/node_modules/jest-runner/build/runTest.js:181:9)
+    at processTicksAndRejections (internal/process/task_queues.js:95:5)</errorStackTrace>
+          <failedSince>680</failedSince>
+        </case>
+        <case>
+          <duration>0.577</duration>
+          <className>nui.ArtifactViewsSaveAsModal</className>
+          <testName>ArtifactViewsSaveAsModal › save shows an error if save fails</testName>
+          <skipped>false</skipped>
+          <errorStackTrace>Error: expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+Expected: Anything, ObjectContaining {&quot;view&quot;: ObjectContaining {&quot;name&quot;: &quot;name with whitespace after&quot;}}
+Received: {&quot;commit&quot;: [Function boundCommit], &quot;dispatch&quot;: [Function boundDispatch], &quot;getters&quot;: {&quot;accountId&quot;: [Function anonymous], &quot;artifactViews&quot;: {&quot;foo&quot;: {&quot;headers&quot;: {&quot;column_ids&quot;: [&quot;1&quot;, &quot;2&quot;]}}}, &quot;editedArtifactView&quot;: null}, &quot;rootGetters&quot;: {&quot;accountId&quot;: [Function anonymous], &quot;artifactViews&quot;: {&quot;foo&quot;: {&quot;headers&quot;: {&quot;column_ids&quot;: [&quot;1&quot;, &quot;2&quot;]}}}, &quot;editedArtifactView&quot;: null}, &quot;rootState&quot;: {}, &quot;state&quot;: {}}, {&quot;artifactDomainId&quot;: &quot;2&quot;, &quot;artifactSchemaId&quot;: &quot;artifact-schema-id&quot;, &quot;projectId&quot;: &quot;project-id&quot;, &quot;view&quot;: {&quot;artifact_schema_id&quot;: &quot;artifact-schema-id&quot;, &quot;created_by&quot;: &quot;account-id&quot;, &quot;headers&quot;: {&quot;column_ids&quot;: [&quot;1&quot;, &quot;2&quot;]}, &quot;name&quot;: &quot;name&quot;, &quot;public&quot;: false}}
+
+Number of calls: 1
+    at Object.&lt;anonymous&gt; (/workspace/src/nui/tests/unit/components/tabular-artifacts/artifactViewsSaveAsModal.spec.js:162:44)
+    at runNextTicks (internal/process/task_queues.js:60:5)
+    at processImmediate (internal/timers.js:437:9)</errorStackTrace>
+          <failedSince>680</failedSince>
+        </case>
+      </cases>
+    </suite>
+  </suites>
+  <duration>1946.9039</duration>
+  <keepLongStdio>false</keepLongStdio>
+</result>
